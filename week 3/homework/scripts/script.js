@@ -3,8 +3,7 @@ let colorBtn = document.getElementById("changeColor")
 let imgBox = document.getElementById("dogImage")
 let imageBtn = document.getElementById("toggleImage")
 
-let assignRandomColor = function()
-{
+let assignRandomColor = function(){
     let rComp = 255 * Math.random()
     let gComp = 255 * Math.random()
     let bComp = 255 * Math.random()
