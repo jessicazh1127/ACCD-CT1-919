@@ -1,19 +1,29 @@
-let x, y;
-let speedX, speedY;
+let posX, posY;
 let radius;
 
 let imgBlack, imgWhite
 
+let currentImg
+
+let countDown = 0
+let tx = 0
+let ty = 1000
+
 function preload (){
-  imgBlack = loadImage(homework/black.png);
-  imgWhite = loadImage(homework/white.png);
+  imgBlack = loadImage("black.png");
+  imgWhite = loadImage("white.png");
+
 }
+
 function setup() {
   createCanvas(800, 800);
+  imageMode(CENTER)
+  currentImg = imgBlack
+
 
   radius = 50
-  x = width / 2;
-  y = height / 2;
+  posX = width / 2;
+  posY = height / 2;
  
 
   noStroke()
@@ -22,32 +32,42 @@ function setup() {
 function draw() {
   background(220);
 
-  circle (x, y, radius*2);
-  image(imgBlack, x, y)
+  circle (posX, posY, radius*2);
+  currentImg = imgBlack
+  image(currentImg, posX, posY, radius*2,radius*2)
 
-  speedX = random(-6, 6);
-  speedY = random(-6, 6);
 
-  speedX = constrain(speedX, -6, 6);
-  speedY = constrain(speedY, -6, 6);
+  let velX = map(noise(tx),0,1,-3,3)
+  let velY = map(noise(ty),0,1,-3,3)
 
-  x += speedX;
-  y += speedY;
+  tx += 0.01
+  ty += 0.01
 
-  if (x < radius) {
-    x = radius;
-    speedX *= -1;
-  } else if (x > width - radius) {
-    x = width - radius;
-    speedX *= -1;
+  posX +=velX
+  posY +=velY
+
+  if (posX + radius >=width || posX - radius <=0){
+    velX = velX*-1
+    currentImg=imgWhite
+    countDown = 16
+  }
+  if (posY + radius >=height || posY - radius <=0){
+    velY = velY*-1
+    currentImg=imgWhite
+    countDown = 16
   }
 
-  if (y < radius) {
-    y = radius;
-    speedY *= -1;
-  } else if (y > height - radius) {
-    y = height - radius;
-    speedY *= -1;
+  if (countDown > 0){
+    countDown --
   }
+  else{
+    currentImg = imgBlack
+  }
+  
+
+  
+  posX = constrain(posX, radius,width-radius)
+  posY = constrain(posY, radius,width-radius)
+
 
 }

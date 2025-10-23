@@ -9,11 +9,6 @@ let radius = 20
 let imgBlack
 let imgWhite
 
-function preload(){
-  imgBlack = loadImage("black.png")
-  imgWhite = loadImage("white.png")
-
-}
 
 function setup() {
   createCanvas(500, 500);
@@ -44,5 +39,5 @@ function draw() {
   noStroke()
 
   circle(posX, posY, radius*2)
-  image(imgWhite, posX, posY)
+  
 }
