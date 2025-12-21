@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Instrument</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 30px;
+      background: #000;
+      color: #fff;
+      font-family: monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 30px;
+    }
+
+    h1, h2, h3 {
+      margin: 10px 0;
+      font-weight: normal;
+    }
+
+    video {
+      width: 80vw;
+      max-width: 900px;
+    }
+
+    .image-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .image-row img {
+      width: 20vw;
+      max-width: 300px;
+    }
+
+    pre {
+      width: 90vw;
+      max-width: 1000px;
+      background: #111;
+      padding: 20px;
+      overflow-x: auto;
+      font-size: 14px;
+      line-height: 1.4;
+      border: 1px solid #333;
+    }
+
+    code {
+      color: #9ef;
+    }
+
+    .concept-text {
+      width: 90vw;
+      max-width: 900px;
+      margin-top: 40px;
+      font-size: 16px;
+      line-height: 1.6;
+      color: #ddd;
+    }
+
+  </style>
+</head>
+
+
+<body>
+
+  <h1>My Instrument</h1>
+
+  <video controls autoplay loop muted>
+    <source src="IMG_7810.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+
+  <div class="image-row">
+    <img src="Screenshot 2025-12-20 at 10.06.04 PM.png" alt="">
+  </div>
+
+  <h2>Arduino Code</h2>
+  <pre><code>
+#define BTN1 13
+#define BTN2 12
+#define BTN3 27
+#define BTN4 15
+#define BTN5 14
+#define POT_PIN A0
+
+void setup() {
+  pinMode(POT_PIN, INPUT);
+  Serial.begin(115200);
+  while(!Serial);
+  Serial.println("ready");
+}
+
+void loop() {
+  Serial.print(digitalRead(BTN1));
+  Serial.print(',');
+  Serial.print(digitalRead(BTN2));
+  Serial.print(',');
+  Serial.print(digitalRead(BTN3));
+  Serial.print(',');
+  Serial.print(digitalRead(BTN4));
+  Serial.print(',');
+  Serial.print(digitalRead(BTN5));
+  Serial.print(',');
+  Serial.println(analogRead(POT_PIN));
+  delay(10);
+}
+  </code></pre>
+
+  <h2>Processing Code</h2>
+  <pre><code>
+import processing.sound.*;
+import processing.serial.*;
+
+SoundFile Trap1, Trap2, Trap3, Trap4;
+SoundFile Trap1B, Trap2B, Trap3B, Trap4B;
+
+boolean[] drumFlags = {true, true, true, true, true};
+boolean switchFlag = true;
+boolean bankB = false;
+
+float bg = 255;
+Serial connection;
+
+void setup() {
+  size(4000, 4000);
+
+  Trap1 = new SoundFile(this, "FA_RR_02_808.wav");
+  Trap2 = new SoundFile(this, "KKATL_808_BigFoot_C.wav");
+  Trap3 = new SoundFile(this, "MT0D3.WAV");
+  Trap4 = new SoundFile(this, "UR_DREAMWAY_808_One_Shot_07_C.wav");
+
+  Trap1B = new SoundFile(this, "HHCD4.WAV");
+  Trap2B = new SoundFile(this, "RIM127.WAV");
+  Trap3B = new SoundFile(this, "MT0D3.WAV");
+  Trap4B = new SoundFile(this, "HHCD4.WAV");
+
+  printArray(Serial.list());
+  connection = new Serial(this, Serial.list()[2], 115200);
+  connection.bufferUntil('\n');
+}
+
+void draw() {
+  background(bg);
+}
+
+void serialEvent(Serial conn) {
+  String incoming = conn.readStringUntil('\n');
+  if (incoming == null) return;
+
+  String[] values = split(trim(incoming), ',');
+  if (values.length != 6) return;
+
+  bg = map(float(values[5]), 0, 4095, 0, 255);
+
+  if (float(values[4]) > 0) {
+    if (switchFlag) {
+      bankB = !bankB;
+      switchFlag = false;
+    }
+  } else {
+    switchFlag = true;
+  }
+
+  playDrum(0, float(values[0]));
+  playDrum(1, float(values[1]));
+  playDrum(2, float(values[2]));
+  playDrum(3, float(values[3]));
+}
+
+void playDrum(int index, float value) {
+  SoundFile current = bankB ? getBSound(index) : getASound(index);
+
+  if (value > 0) {
+    if (!current.isPlaying() && drumFlags[index]) {
+      current.play();
+      drumFlags[index] = false;
+    }
+  } else {
+    drumFlags[index] = true;
+  }
+}
+
+SoundFile getASound(int i) {
+  if (i == 0) return Trap1;
+  if (i == 1) return Trap2;
+  if (i == 2) return Trap3;
+  return Trap4;
+}
+
+SoundFile getBSound(int i) {
+  if (i == 0) return Trap1B;
+  if (i == 1) return Trap2B;
+  if (i == 2) return Trap3B;
+  return Trap4B;
+}
+  </code></pre>
+
+<div class="concept-text">
+  <p><strong>Will it be specific to a genre of music?</strong></p>
+  <p>
+    No. I added a button to switch between whole groups of sound tracks,
+    which allows the instrument to fit more music styles and be played
+    with fewer buttons on the breadboard.
+  </p>
+</div>
+
+
+</body>
+</html>
