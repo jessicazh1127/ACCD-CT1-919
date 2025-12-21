@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blinking Lights</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 30px;
+      background: #000;
+      color: #fff;
+      font-family: monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 30px;
+    }
+
+    h1, h2, h3 {
+      margin: 10px 0;
+      font-weight: normal;
+    }
+
+    video {
+      width: 80vw;
+      max-width: 900px;
+    }
+
+    .image-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .image-row img {
+      width: 20vw;
+      max-width: 300px;
+    }
+
+    pre {
+      width: 90vw;
+      max-width: 1000px;
+      background: #111;
+      padding: 20px;
+      overflow-x: auto;
+      font-size: 14px;
+      line-height: 1.4;
+      border: 1px solid #333;
+    }
+
+    code {
+      color: #9ef;
+    }
+
+    .concept-text {
+      width: 90vw;
+      max-width: 900px;
+      margin-top: 40px;
+      font-size: 16px;
+      line-height: 1.6;
+      color: #ddd;
+    }
+
+  </style>
+</head>
+
+
+<body>
+
+  <h1>Blinking Lights</h1>
+
+  <div class="concept-text">
+    <p><strong> Link to the video </strong></p>
+    <p>
+      https://www.dropbox.com/scl/fi/r8o97s3w4s2acihq8i898/week-11-blink-light.mp4?rlkey=9ju3a9o6k9pxd2ff7nccrya1i&e=1&st=hqucchpy&dl=0
+
+      Experiments on Arduino Code which make lights to blink on beats of the song.
+      I choose Twinkle Twinkle Little Stars, QingHuaCi (Blue and White Porcelain), Also the morse code of my name.
+      I found it very diffcult to make sure how long should the time be for each beats.
+      Connecting things on the breadboard is much more easier than before, I know which should go where now!
+    </p>
+  </div>
+
+
+  <h2>Arduino Code for Twinkle Twinkle Little Stars</h2>
+  <pre><code>
+#define LED_PIN 21
+void setup() {
+  // put your setup code here, to run once:
+  pinMode(LED_PIN, OUTPUT);
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  for(int i = 0; i < 6; i++){
+  digitalWrite(LED_PIN, HIGH);
+  delay(300);
+  digitalWrite(LED_PIN, LOW);
+  delay(300);
+ }
+  digitalWrite(LED_PIN, HIGH);
+  delay(600);
+  digitalWrite(LED_PIN, LOW);
+  delay(300);
+}
+ </code></pre>
+
+  <h2>Arduino Code for QingHuaCi</h2>
+  <pre><code>
+#define LED_PIN 21
+
+int beat[] = {
+  267,267,267,535,267,267,535,267,267,267,267,535
+};
+
+int beatCount = sizeof(beat) / sizeof(beat[0]);
+
+void setup() {
+  pinMode(LED_PIN, OUTPUT);
+}
+
+void loop() {
+    for (int i = 0; i < beatCount; i++) {
+    digitalWrite(LED_PIN, HIGH);   
+    delay(beat[i]);               
+    digitalWrite(LED_PIN, LOW);    
+    delay(100);                    
+  }
+    digitalWrite(LED_PIN, LOW);    
+    delay(267);
+ }
+  </code></pre>
+
+   <div class="image-row">
+     <h2>Arduino Code for Jessica Morse Code</h2>
+    <img src="Screenshot 2025-12-21 at 2.26.23 AM.png" alt="">
+  </div>
+
+
+</body>
+</html>
