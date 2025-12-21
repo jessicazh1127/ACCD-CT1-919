@@ -1,8 +1,17 @@
-html, body {
+body {
   margin: 0;
   padding: 0;
 }
 
-canvas {
+
+.image-row {
+  display: flex;
+  width: 100vw;
+}
+
+.image-row img {
+  width: calc(100vw / 6); 
+  height: auto;
+  object-fit: cover;      
   display: block;
 }
